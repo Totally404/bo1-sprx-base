@@ -1,14 +1,13 @@
 namespace Addresses{
 	enum addresses{
 		//General
-		Cbuff_AddText = 0x313C18,
-		Key_isDown = 0x1185BC,
+		Cbuff_AddText = 0x399CC8,
 
 		//Huds
-		R_RegisterFont = 0x75A2C0,
-		Material_RegisterHandle = 0x763220,
-		R_AddCmdDrawText = 0x76A910,
-		R_AddCmdDrawStretchPic = 0x076A3E8,
-		R_TextWidth = 0x75A338,
+		Material_RegisterHandle = 0x745440,
+		UI_DrawText_p = 0x42DE98,
+		UI_GetFont = 0x42DBD8,
+		CL_DrawStr = 0x1A6D98,
+		R_TextWidth_t = 0x734570
 	};
 };

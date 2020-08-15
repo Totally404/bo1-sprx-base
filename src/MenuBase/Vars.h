@@ -34,7 +34,7 @@ struct _menu{
 		float* primaryContrast1;
 		float* primaryContrast2;
 	}colors;
-	char *font;
+	int font;
 }menu;
 
 struct _screen{
@@ -84,9 +84,8 @@ float LightBlack5[4] = { 0, 0, 0, 0.5f };
 float FullWhite[4] = { 1.0, 1.0f, 1.0f, 1 };
 
 void setVars() {
-	//screen width gets dynamically set later
-	//Width - 1080p: 1280, 720p: 1280, 576p: 720;
-	//Height - 1080p: 1080, 720p : 720, 576p : 576;
+	screen.width = 854;
+	screen.height = 480;
 
 	menu.scroll = 0;
 	menu.prevOptions = 0;
@@ -109,7 +108,7 @@ void setVars() {
 	menu.colors.primaryContrast1 = Black;
 	menu.colors.primaryContrast2 = Grey;
 
-	menu.font = FONT_NORMAL;
+	menu.font = 0;
 
 	game.inGame = true;
 

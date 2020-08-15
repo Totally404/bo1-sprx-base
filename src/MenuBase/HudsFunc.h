@@ -1,16 +1,24 @@
-void drawShader(float x, float y, float width, float height, float* color)
-{
-	R_AddCmdDrawStretchPic(x * screen.width, y * screen.height, width * screen.width, height * screen.height, 1, 1, 1, 1, color, Material_RegisterHandle("white", 0, false, 0));
+void drawShader(float x, float y, float width, float height, float* color, char* material = "white") {
+	ScreenPlacement* scr = (ScreenPlacement*)0xD69D04;
+	scr->realViewableMaxX = (int32_t)x;
+	scr->realViewableMaxY = (int32_t)y;
+	CL_DrawStretchPic(scr, x * screen.width - 107, y * screen.height, width * screen.width, height * screen.height, 0, 0, 1, 1, 1, 1, color, Material_Register(material, 0));
 }
-void drawText(const char *xtext, float x, float y, const char *xfont, float xfontSize, float* color, float hAlign = 0.0f, float vAlign = 0.0f)
+
+void drawText(const char *text, float x, float y, int font, float fontSize, float* color, float hAlign = 0.0f, float vAlign = 0.0f)
 {
-	R_AddCmdDrawText(xtext, 0x7FFFFFFF, R_RegisterFont(xfont, 0), x * screen.width - (R_TextWidth(0, xtext, 0x7FFFFFFF, R_RegisterFont(xfont, 0)) * xfontSize * hAlign), y * screen.height + (screen.height * ((-vAlign + 1.25) * 0.68) * xfontSize / 25), xfontSize, xfontSize * screen.height / 720, 0, color, 0);
+	ScreenPlacement* scr = (ScreenPlacement*)0xD69D04;
+	scr->realViewableMaxX = (int32_t)x;
+	scr->realViewableMaxY = (int32_t)y;
+	Font_s* font_p = UI_GetFontHandle(scr, font, fontSize);
+	UI_DrawText(scr, text, 0x7FFFFFFF, font_p, x * screen.width - 107 - (R_TextWidth(text, 0x7FFFFFFF, font_p) * fontSize * 0.39 * hAlign), y * screen.height + (screen.height * ((-vAlign + 1.25) * 0.68) * fontSize / 25), 0, 0, fontSize * 0.39, color, 0);
 }
+
 
 void doNothing() {}
 
 bool isInGame() {
-	return *(char*)(0x1CB68C0 + 0x18);
+	return *(char*)0xD1E267 == 0x0A;
 }
 
 //Function pointer used to call function passed into addOption

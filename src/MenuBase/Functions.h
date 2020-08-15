@@ -17,72 +17,40 @@ void constRun() {
 	}
 
 	if (options.fov != 65) {
-		*(float*)0x1CC5218 = options.fov;
+		char buf1[64] = "cg_fov ";
+		char buf2[64];
+		ftoa(options.fov, buf2, 2);
+		//strcpy(buf1, one);
+		strcat(buf1, buf2);
+		cBuf_Addtext(0, buf1);
 	}
 }
 
 //gets value from memory rather than a variable so it is always updated, even after changing in an rtm
 bool redBoxesBool() {;
-	return *(char*)0x783E3 == 0x01;
+	return *(char*)0x1205C0 == 0x60;
 }
 
 void toggleRedBoxes() {
 	if (redBoxesBool()) {
-		unsigned char bytes[4] = { 0x38, 0x60, 0x00, 0x00 };
-		write_process(0x783E0, &bytes, 4);
+		unsigned char bytes[4] = { 0x41, 0x86, 0x02, 0x78 };
+		write_process(0x1205C0, &bytes, 4);
 	}
 	else {
-		unsigned char bytes[4] = { 0x38, 0x60, 0x00, 0x01 };
-		write_process(0x783E0, &bytes, 4);
+		unsigned char bytes[4] = { 0x60, 0x00, 0x00, 0x00 };
+		write_process(0x1205C0, &bytes, 4);
 	}
 }
 
 //Designer
 void toggleGrid() { options.grid = !options.grid; }
-void menuXPlus() {
-	menu.x += 0.005;
-}
-void menuXMinus() {
-	menu.x -= 0.005;
-}
-void menuYPlus() {
-	menu.y += 0.005 * 16/9;
-}
-void menuYMinus() {
-	menu.y -= 0.005 * 16 / 9;
-}
-void menuWidthPlus() {
-	menu.width += 0.005;
-}
-void menuWidthMinus() {
-	menu.width -= 0.005;
-}
-void menuHeightPlus() {
-	menu.height += 0.005;
-}
-void menuHeightMinus() {
-	menu.height -= 0.005;
-}
-void menuOptionSpacingPlus() {
-	menu.optionSpacing += 0.001;
-}
-void menuOptionSpacingMinus() {
-	menu.optionSpacing -= 0.001;
-}
-void fontSizePlus() {
-	menu.optionFontSize += 0.1;
-}
-void fontSizeMinus() {
-	menu.optionFontSize -= 0.1;
-}
 
 void openKeyboard(void(*f)(char*)) {
 	keyboardOpened = true;
 	keyboardFunction = f;
 }
 void setName(char* name) {
-	strcpy((char*)0x026C067F, name);
-	strcpy((char*)0x026C0658, name);
+	strcpy((char*)0x02000934, name);
 }
 void openNameKeyboard() {
 	openKeyboard(setName);

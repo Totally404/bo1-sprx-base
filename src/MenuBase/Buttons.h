@@ -1,33 +1,30 @@
+int LocalButtons = 0xD19800;
 enum Buttons
 {
-	Null = 0,
-	X = 1,
-	O = 2,
-	SQUARE = 3,
-	TRIANGLE = 4,
-	L1 = 5,
-	R1 = 6,
-	START = 14,
-	SELECT = 15,
-	L3 = 16,
-	R3 = 17,
-	L2 = 18,
-	R2 = 19,
-	UP = 20,
-	DOWN = 21,
-	LEFT = 22,
-	RIGHT = 23,
-	APAD_UP = 28,
-	APAD_DOWN = 29,
-	APAD_LEFT = 30,
-	APAD_RIGHT = 31
+	UP = 0x1FF,
+	DOWN = 0x20F,
+	RIGHT = 0x22F,
+	LEFT = 0x21F,
+	R3 = 0x1CF,
+	L3 = 0x1BF,
+	SQUARE = 0xEF,
+	CROSS = 0xCF,
+	TRIANGLE = 0xFF,
+	CURCLE = 0xDF,
+	APAD_UP = 0x27F,
+	APAD_LEFT = 0x29F,
+	APAD_RIGHT = 0x2AF,
+	APAD_DOWN = 0x28F,
+	R2 = 0x1EF,
+	L2 = 0x1DF,
+	L1 = 0x10F,
+	R1 = 0x11F,
+	SELECT = 0x1AF,
+	START = 0x19F
 };
-
-bool detect(int Button)
+bool detect(Buttons Button)
 {
-	int Key_IsDown_t[2] = { Addresses::Key_isDown, 0xD67E98 };
-	int(*Key_IsDown)(int localClientNum, int keynum) = (int(*)(int, int))&Key_IsDown_t;
-	return Key_IsDown(0, Button);
+	return (*(int*)(LocalButtons + Button) != 0);
 }
 
 /*

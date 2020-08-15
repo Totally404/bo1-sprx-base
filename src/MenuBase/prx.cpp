@@ -16,9 +16,6 @@ SYS_LIB_EXPORT( _MenuBase_export_function, LIBNAME );
 void paintHook(int x, int xx) {
 	Menu_PaintAll_Stub(x, xx);
 
-	screen.width = *(short*)(0xD933D4);//Width
-	screen.height = *(short*)(0xD933D6);//Height
-
 	if (game.inGame != isInGame()) joiningLeavingGame();
 	game.inGame = isInGame();
 
@@ -27,7 +24,7 @@ void paintHook(int x, int xx) {
 	if (menu.open) {
 		doMenu();
 	}
-
+	
 	if (menu.framesPassed > 10) {
 		if (menu.open) {
 			if (detect(UP)) {
@@ -86,7 +83,7 @@ void Thread(uint64_t nothing) {
 	sleep(10000);
 	console_write("Loaded");
 	setVars();
-	hookFunctionStart((int)0x3971A0, (int)Menu_PaintAll_Stub, (int)paintHook);
+	hookFunctionStart((int)0x465368, (int)Menu_PaintAll_Stub, (int)paintHook);
 	while (true) {
 		if (keyboardOpened) {
 			char output[1024];

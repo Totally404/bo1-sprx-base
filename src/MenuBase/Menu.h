@@ -1,7 +1,7 @@
 void doMenu() {
 	//Background
 	drawShader(menu.x, menu.y, menu.width, menu.height + (menu.optionSpacing * menu.prevOptions), menu.colors.bg);
-
+	
 	//Title
 	drawText("Menu Title", menu.x + (menu.width / 2), menu.y + menu.height / 2, menu.font, 1, menu.colors.text, 0.5, 0.5);
 
@@ -13,13 +13,12 @@ void doMenu() {
 	addSubMenu("Name", Main, Name);
 	addSubMenu("Designer", Main, Designer);
 
-
 	addSubMenu("Sub 1 Sub 1", MainSub1, MainSub1Sub1);
 	addOption("Sub 1 Sub 1 Option 1", MainSub1Sub1, doNothing);
 
 	addBoolOption("Red Boxes", MainSub2, toggleRedBoxes, redBoxesBool());
 	addBoolOption("Red Boxes", MainSub2, toggleRedBoxes, redBoxesBool());
-	addFloatOption("FOV", MainSub2, options.fov, 10, 170, 0.5, 0);
+	addFloatOption("FOV", MainSub2, options.fov, 10, 160, 0.5, 0);
 	addArrayOption("Test", MainSub2, testArr, 4, options.testIndex);
 
 	addOption("Pre Option 1", Pre, doNothing);
@@ -27,7 +26,6 @@ void doMenu() {
 	addSubMenu("Designer", Pre, Designer);
 
 	addOption("Custom", Name, openNameKeyboard);
-
 
 	addBoolOption("Toggle Grid", Designer, toggleGrid, options.grid);
 	addFloatOption("Menu X", Designer, menu.x, 0, 1, 0.002, 3);

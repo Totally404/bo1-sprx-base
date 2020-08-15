@@ -1,43 +1,55 @@
-#define TOC (0xD67E98)
+#define TOC ( 0x0072DCE8 )//1.13 actually 0xB576E8 as defined in TOC2
+#define TOC2 ( 0xB576E8 )
 
-#define FONT_SMALL_DEV    "fonts/720/smallDevFont"
-#define FONT_BIG_DEV    "fonts/720/bigDevFont"
-#define FONT_CONSOLE    "fonts/720/consoleFont"
-#define FONT_BIG        "fonts/720/bigFont"
-#define FONT_SMALL        "fonts/720/smallFont"		//these all work now
-#define FONT_BOLD        "fonts/720/boldFont"
-#define FONT_NORMAL        "fonts/720/normalFont"
-#define FONT_EXTRA_BIG    "fonts/720/extraBigFont"
-#define FONT_OBJECTIVE    "fonts/720/objectiveFont" 
-
-int R_RegisterFont_a[2] = { Addresses::R_RegisterFont, TOC };
-int R_AddCmdDrawTextInternal_a[2] = { Addresses::R_AddCmdDrawText, TOC };
-int Material_RegisterHandle_a[2] = { Addresses::Material_RegisterHandle, TOC };
-int R_AddCmdDrawStretchPicInternal_a[2] = { Addresses::R_AddCmdDrawStretchPic, TOC };
-int R_TextWidth_t[2] = { Addresses::R_TextWidth, TOC };
-
-void*(*R_RegisterFont)(const char * name, int imageTrack) = (void*(*)(const char*, int))&R_RegisterFont_a;
-void(*R_AddCmdDrawText)(const char* text, int maxChars, void* font, float x, float y, float yScale, float xScale, float rotation, float* colors, int Style) = (void(*)(const char*, int, void*, float, float, float, float, float, float*, int))&R_AddCmdDrawTextInternal_a;
-void*(*Material_RegisterHandle)(const char *name, int imageTrack, bool errorIfMissing, int waitTime) = (void*(*)(const char*, int, bool, int))&Material_RegisterHandle_a;
-void(*R_AddCmdDrawStretchPic)(float x, float y, float w, float h, float s0, float t0, float s1, float t1, float* color, void *material) = (void(*)(float, float, float, float, float, float, float, float, float*, void*))&R_AddCmdDrawStretchPicInternal_a;
-int(*R_TextWidth)(int localClientNum, const char *text, int maxChars, void *font) = (int(*)(int localClientNum, const char *text, int maxChars, void *font))&R_TextWidth_t;
-
-
-int Cbuff_AddText_t[2] = { 0x313C18, TOC };
-int Dvar_GetBool_a[2] = { 0x3DA948, TOC };
-int Dvar_FindMalleableVar_a[2] = { 0x3DA628, TOC };
-
-
-/*void(*cBuf_Addtext)(int localClientNum, char* text) = (void(*)(int, char*))&Cbuff_AddText_t;
-bool(*Dvar_GetBool_f)(dvar_t* LocalClient) = (bool(*)(dvar_t*))&Dvar_GetBool_a;
-dvar_t*(*Dvar_FindMalleableVar)(const char* LocalClient) = (dvar_t*(*)(const char*))&Dvar_FindMalleableVar_a;
-bool getBool(const char *dvarName)
+struct Font_s
 {
-	if (Dvar_GetBool_f(Dvar_FindMalleableVar(dvarName)))
-		return true;
-	else
-		return false;
-}*/
+	int fontName;
+	float pixelHeight;
+	int glyphCount;
+	int material;
+	int glowMaterial;
+	int glyphs;
+};
+
+struct ScreenPlacement
+{
+	int64_t	 scaleVirtualToReal;
+	int64_t scaleVirtualToFull;
+	int64_t scaleRealToVirtual;
+	int64_t virtualViewableMin;
+	int64_t virtualViewableMax;
+	int64_t virtualTweakableMin;
+	int64_t virtualTweakableMax;
+	int64_t realViewportBase;
+	int64_t realViewportSize;
+	int64_t realViewportMid;
+	int64_t realViewableMin;
+	//int64_t realViewableMax; you can split any var in here by spliting up the 64 bit value to a 32 bit value for x/y
+	int32_t realViewableMaxX;
+	int32_t realViewableMaxY;
+	int64_t realTweakableMin;
+	int64_t realTweakableMax;
+	int64_t subScreen;
+};
+
+//Draw
+opd_s Material_RegisterHandle = { 0x745440, TOC };
+opd_s UI_DrawText_p = { 0x42DE98, TOC };
+opd_s UI_GetFont = { 0x42DBD8, TOC };
+opd_s CL_DrawStr = { 0x1A6D98, TOC };
+opd_s R_TextWidth_t = { 0x734570, TOC };
+
+void*(*Material_Register)(const char * font, int imageTrac) = (void*(*)(const char *, int))&Material_RegisterHandle;
+void(*UI_DrawText)(ScreenPlacement* scrPlace, const char *text, int maxChars, Font_s* font, float x, float y, int horzAlign, int vertAlign, float scale, const float *color, int style) = (void(*)(ScreenPlacement*, const char*, int, Font_s*, float, float, int, int, float, const float*, int))&UI_DrawText_p;
+Font_s*(*UI_GetFontHandle)(ScreenPlacement* scrPlace, int fontEnum, float scale) = (Font_s*(*)(ScreenPlacement*, int, float))&UI_GetFont;
+void(*CL_DrawStretchPic)(ScreenPlacement* scrPlace, float x, float y, float w, float h, int horzAlign, int vertAlign, float s1, float t1, float s2, float t2, const float *color, void *material) = (void(*)(ScreenPlacement*, float, float, float, float, int, int, float, float, float, float, const float *, void *))&CL_DrawStr;
+int(*R_TextWidth)(const char *text, int maxChars, Font_s *font) = (int(*)(const char*, int, Font_s*))&R_TextWidth_t;
+
+
+opd_s cb = { 0x00399CC8, TOC };
+
+void(*cBuf_Addtext)(int client, char* cmd) = (void(*)(int, char*))&cb;
+
 
 void Menu_PaintAll_Stub(int a, int b) {
 	__asm("li %r3, 0x3");
